@@ -130,7 +130,7 @@ app.get("/redirect-login/*", (req, res) => {
         .status(200)
         .json({
           message: "Login Successful",
-          user: user,
+          token: user.token,
           decryptedData: decryptedData,
         });
       return;

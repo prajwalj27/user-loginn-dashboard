@@ -4,13 +4,14 @@ import axios from "axios";
 import { JSEncrypt } from "jsencrypt";
 
 const App = () => {
-  // const [formData, setFormData] = useState({
-  //   username: "",
-  //   password: "",
-  // });
+  const [token, setToken] = useState("");
   const userData = {
     username: "prajwal",
     password: "prajwal123",
+  };
+
+  const onChange = (tokenValue) => {
+    setToken(tokenValue);
   };
 
   const dataEncryption = (data) => {
@@ -27,30 +28,28 @@ const App = () => {
     encrypt.setPublicKey(publicKey);
 
     var encrypted = encrypt.encrypt(JSON.stringify(data));
-    console.log("Encrypted Data: ", encrypted);
-
+    
     // Convert all the + symbols in the encrypted string to %2B
     var encryptedForURI = encodeURIComponent(encrypted);
+    console.log("Encrypted Data: ", encryptedForURI);
     return encryptedForURI;
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const encryptedData = dataEncryption(userData);
-    const response = await axios.get(
-      `http://localhost:8080/redirect-login/?data=${encryptedData}`
-    );
-    console.log(response.data);
-    console.log("Let's navigate to the dashboard");
+    // const encryptedData = dataEncryption(userData);
+    // const response = await axios.get(
+    //   `http://localhost:8080/redirect-login/?data=${encryptedData}`
+    // );
+    // console.log(response.data);
+    // console.log("Let's navigate to the dashboard");
     window
       .open(
-        `http://localhost:3000/dashboard/?token=${response.data.user.token}`,
+        `http://localhost:3000/dashboard/?token=${token}`,
         "_blank"
       )
       .focus();
-
-   
   };
 
   return (
@@ -59,6 +58,22 @@ const App = () => {
       <h3>User Data</h3>
       <p>Username: {userData.username}</p>
       <p>Password: {userData.password}</p>
+
+      <button onClick={() => {dataEncryption(userData)}}>Encrypt</button>
+
+      <br />
+      <br />
+
+      <label htmlFor="token">Token -</label>
+      <input
+        type="text"
+        value={token}
+        placeholder="Enter Token received from response"
+        style={{width: "800px"}}
+        onChange={(e) => {
+          onChange(e.target.value);
+        }}
+      />
       <br />
       <button onClick={handleLogin}>View the App1 Dashboard</button>
     </div>
