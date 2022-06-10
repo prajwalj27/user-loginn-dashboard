@@ -6,7 +6,7 @@ const TOKEN_KEY = "secret";
 
 export const auth = (req, res, next) => {
   const token =
-    req.body.token || req.query.token || req.headers["x-access-token"];
+    req.body.token || req.query.token || req.headers["authorization"];
 
   if (!token) {
     return res.status(403).send("A token is required for authentication");
@@ -16,7 +16,7 @@ export const auth = (req, res, next) => {
     // req.user = decoded;
   } catch (err) {
     console.log(err)
-    return res.status(401).send("Invalid Token");
+    return res.status(401).send(err);
   }
   return next();
 };

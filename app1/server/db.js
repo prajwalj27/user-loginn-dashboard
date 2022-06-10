@@ -1,7 +1,7 @@
-export const db = [
+export const dbUsers = [
   {
     id: 1,
-    username: "prajwal123",
+    username: "prajwal",
     password: "prajwal123",
   },
   {

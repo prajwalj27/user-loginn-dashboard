@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = ({token, setToken}) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
@@ -19,13 +19,14 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8080/login",
+        "http://localhost:8080/login1",
         formData
       );
       console.log(response.data);
+      setToken(response.data.token)
       if (response.data.message === "Login Successful") {
         console.log("Let's navigate to the dashboard");
-        navigate("/dashboard");
+        navigate(`/dashboard/?token=${response.data.token}`);
       }
     } catch (err) {
       // alert(err.response.data.message);
