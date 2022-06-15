@@ -5,9 +5,13 @@ import { JSEncrypt } from "jsencrypt";
 
 const App = () => {
   const [token, setToken] = useState("");
+  const [encryptData, setEncryptData] = useState("");
+
   const userData = {
-    username: "prajwal",
-    password: "prajwal123",
+    apikey: "api-key",
+    uid: "1234567890",
+    client_id: "client-id-1",
+    privilege: ["prvg1", "prvg2"],
   };
 
   const onChange = (tokenValue) => {
@@ -28,10 +32,11 @@ const App = () => {
     encrypt.setPublicKey(publicKey);
 
     var encrypted = encrypt.encrypt(JSON.stringify(data));
-    
-    // Convert all the + symbols in the encrypted string to %2B
+
+    // Convert all the '+' symbols in the encrypted string to %2B
     var encryptedForURI = encodeURIComponent(encrypted);
     console.log("Encrypted Data: ", encryptedForURI);
+    setEncryptData(encryptedForURI);
     return encryptedForURI;
   };
 
@@ -45,37 +50,59 @@ const App = () => {
     // console.log(response.data);
     // console.log("Let's navigate to the dashboard");
     window
-      .open(
-        `http://localhost:3000/dashboard/?token=${token}`,
-        "_blank"
-      )
+      .open(`http://localhost:3000/#/pages/login/?token=${token}`, "_blank")
       .focus();
   };
-
+  
+  // http://localhost:3000/dashboard/?token=${token}
   return (
     <div className="App">
       <h1>App 2</h1>
-      <h3>User Data</h3>
-      <p>Username: {userData.username}</p>
-      <p>Password: {userData.password}</p>
-
-      <button onClick={() => {dataEncryption(userData)}}>Encrypt</button>
+      <p>
+        <b> Data</b>
+      </p>
+      <textarea
+        rows={10}
+        cols={100}
+        value={JSON.stringify(JSON.parse(JSON.stringify(userData)), null, 2)}
+        readOnly
+      />
+      <br />
+      <button
+        onClick={() => {
+          dataEncryption(userData);
+        }}
+      >
+        Encrypt
+      </button>
 
       <br />
+      {encryptData ? (
+        <>
+          <p>
+            <b>Encrypted Data</b>
+          </p>
+          <textarea rows={5} cols={100} value={encryptData} readOnly />
+        </>
+      ) : (
+        <></>
+      )}
       <br />
+      <br />
+      <br />  
 
       <label htmlFor="token">Token -</label>
       <input
         type="text"
         value={token}
         placeholder="Enter Token received from response"
-        style={{width: "800px"}}
+        style={{ width: "800px" }}
         onChange={(e) => {
           onChange(e.target.value);
         }}
       />
       <br />
-      <button onClick={handleLogin}>View the App1 Dashboard</button>
+      <button onClick={handleLogin}>View the ESPL Dashboard</button>
     </div>
   );
 };
